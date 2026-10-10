@@ -1,22 +1,25 @@
 # YOLOv3-tiny baseline
 
-Fine-tune COCO-pretrained YOLOv3-tiny on Penn–Fudan for one-class `person` detection.
+[Training notebook](YOLOv3_tiny_PennFudan_baseline.ipynb) for fine-tuning COCO-pretrained YOLOv3-tiny on Penn–Fudan with one class: `person`.
 
-Open [the notebook](YOLOv3_tiny_PennFudan_baseline.ipynb) in Jupyter or Colab and run the cells in order. Use Python 3.10–3.13 and preferably a CUDA GPU. The setup cell installs training dependencies and pins the source revision. For local use, install Jupyter with `python -m pip install jupyterlab`, then run `jupyter lab` from the repository root.
+Requires Python 3.10–3.13, Git and Jupyter. A CUDA GPU is recommended. The notebook installs training dependencies and records the installed versions. Run the cells in order.
 
-Expected prepared data:
+Input is the prepared `data/processed` and `data/splits` folders. Set `DATA_ROOT` if they live elsewhere. Alternatively, put `pedestrian_data.zip` in the repository root or home directory.
 
-```text
-data/processed/images/{train,val,test}/
-data/processed/labels/{train,val,test}/
-data/splits/{train,val,test}.txt
-data/splits/statistics.json
-```
+Training uses 119 images, 640 px, 50 epochs, batch 16, AdamW, initial learning rate 0.001 and seed 42. Validation uses 25 images. The 26 test images are excluded from training and validation. Augmentation applies only to training.
 
-Set `DATA_ROOT` if these folders live elsewhere. Alternatively, put `pedestrian_data.zip` in the repository root or your home directory; in Colab, upload it to `/content`. The notebook extracts it under `baseline/runs/` and verifies the existing labels and split.
+Outputs are saved under `baseline/runs/artifacts/<RUN_NAME>/`:
 
-Training uses 640 px, 50 epochs, batch 16, AdamW, initial learning rate 0.001 and seed 42. There are 119 training images, 25 validation images and 26 held-out test images. Augmentation applies only to training. The test set is checked for data integrity but is not used for inference or model selection.
+| File | Contents |
+|---|---|
+| `training/weights/best.pt` | Best validation checkpoint |
+| `training/results.csv` | Epoch losses, metrics and learning rates |
+| `train_*.log` | Training console output and warnings |
+| `train_runtime.json` | Timestamps, duration, status and exit code |
+| `errors.jsonl` | Exceptions and failed commands, if any |
+| `training_summary.json` | Completed epochs, saved parameters, runtime and checkpoint hash |
+| `training/opt.yaml`, `training/hyp.yaml` | Trainer settings |
+| `validation/predictions.json`, `validation/labels/` | Validation predictions |
+| `environment.json`, `requirements-freeze.txt` | Hardware and package versions |
 
-Outputs include the best checkpoint, epoch logs, validation predictions, native validation metrics, actual settings, environment details, training time and recorded errors. The notebook bundles these into a ZIP. Generated runs stay out of Git. Choose a new `RUN_NAME` for each experiment and copy outputs out of Colab before ending the session.
-
-The notebook documents gradient accumulation and warmup settings for comparison with YOLO11n. The full 50-epoch experiment remains to be run.
+The last cell bundles the outputs into a ZIP. Use a new `RUN_NAME` for each experiment. Logs and checkpoints are generated when training runs; the full 50-epoch run has not been executed yet.
