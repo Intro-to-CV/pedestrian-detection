@@ -1,0 +1,7 @@
+# Run Ultralytics from the repository root so this relative path resolves.
+path: data/processed
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: person
