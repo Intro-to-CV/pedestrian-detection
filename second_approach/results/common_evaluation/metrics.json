@@ -1,0 +1,30 @@
+{
+  "schema": "detector_evaluation_v1",
+  "model": "YOLO11n",
+  "split": "val",
+  "images": 25,
+  "ground_truth_instances": 67,
+  "detections": 7418,
+  "iou_thresholds_for_map": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "ap_method": "101-point interpolated AP",
+  "mAP50": 0.9832219833759904,
+  "mAP50_95": 0.8655244967183584,
+  "precision_best_f1_iou50": 0.9692307692307692,
+  "recall_best_f1_iou50": 0.9402985074626866,
+  "confidence_best_f1_iou50": 0.361187,
+  "error_review_iou": 0.5,
+  "error_review_confidence": 0.25,
+  "false_positives": 4,
+  "false_negatives": 4
+}
