@@ -38,6 +38,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="unknown", help="Model name stored in result metadata.")
     parser.add_argument("--error-confidence", type=float, default=0.25,
                         help="Confidence floor used for the FP/FN review (default: 0.25).")
+    parser.add_argument("--operating-confidence", type=float,
+                        help="Validation-selected threshold for fixed-threshold precision/recall. Required for test.")
     return parser.parse_args()
 
 
@@ -162,6 +164,16 @@ def precision_recall_at_best_f1(true_positive: np.ndarray, confidences: np.ndarr
     return float(precision[index]), float(recall[index]), float(confidences[index]), precision, recall
 
 
+def precision_recall_at_confidence(true_positive: np.ndarray, confidences: np.ndarray,
+                                   count_gt: int, threshold: float) -> tuple[float, float, int, int, int]:
+    selected = confidences >= threshold
+    tp = int(true_positive[selected].sum())
+    fp = int(selected.sum()) - tp
+    fn = count_gt - tp
+    return (tp / (tp + fp) if tp + fp else 0.0,
+            tp / count_gt if count_gt else 0.0, tp, fp, fn)
+
+
 def error_rows(detections: list[dict[str, Any]], ground_truth: dict[str, list[dict[str, Any]]],
                confidence_floor: float) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
@@ -190,12 +202,13 @@ def error_rows(detections: list[dict[str, Any]], ground_truth: dict[str, list[di
     return rows
 
 
-def write_pr_curve(path: Path, precision: np.ndarray, recall: np.ndarray, ap50: float) -> None:
+def write_pr_curve(path: Path, precision: np.ndarray, recall: np.ndarray, ap50: float, split: str) -> None:
     import matplotlib.pyplot as plt
 
     figure, axis = plt.subplots(figsize=(6, 5))
     axis.plot(recall, precision, color="#2563eb", linewidth=2, label=f"person, AP@0.5={ap50:.3f}")
-    axis.set(xlim=(0, 1), ylim=(0, 1.02), xlabel="Recall", ylabel="Precision", title="Validation PR curve (IoU=0.50)")
+    axis.set(xlim=(0, 1), ylim=(0, 1.02), xlabel="Recall", ylabel="Precision",
+             title=f"{split.title()} PR curve (IoU=0.50)")
     axis.grid(alpha=0.25)
     axis.legend(loc="lower left")
     figure.tight_layout()
@@ -207,6 +220,10 @@ def main() -> None:
     args = parse_args()
     if not 0 <= args.error_confidence <= 1:
         raise ValueError("--error-confidence must be in [0, 1]")
+    if args.operating_confidence is not None and not 0 <= args.operating_confidence <= 1:
+        raise ValueError("--operating-confidence must be in [0, 1]")
+    if args.split == "test" and args.operating_confidence is None:
+        raise ValueError("Test evaluation requires a validation-selected --operating-confidence")
     ground_truth = read_ground_truth(args.labels, args.image_size)
     detections = read_predictions(args.predictions, set(ground_truth))
     class_ids = sorted({target["class_id"] for targets in ground_truth.values() for target in targets})
@@ -236,25 +253,35 @@ def main() -> None:
         "ap_method": "101-point interpolated AP",
         "mAP50": map50,
         "mAP50_95": map50_95,
-        "precision_best_f1_iou50": precision,
-        "recall_best_f1_iou50": recall,
-        "confidence_best_f1_iou50": best_confidence,
         "error_review_iou": 0.5,
         "error_review_confidence": args.error_confidence,
         "false_positives": sum(row["type"] == "FP" for row in errors),
         "false_negatives": sum(row["type"] == "FN" for row in errors),
     }
+    if args.split != "test":
+        metrics.update(precision_best_f1_iou50=precision,
+                       recall_best_f1_iou50=recall,
+                       confidence_best_f1_iou50=best_confidence)
+    if args.operating_confidence is not None:
+        fixed_p, fixed_r, tp, fp, fn = precision_recall_at_confidence(
+            tp50, confidences50, count_gt50, args.operating_confidence)
+        metrics.update(operating_confidence=args.operating_confidence,
+                       precision_at_operating_confidence=fixed_p,
+                       recall_at_operating_confidence=fixed_r,
+                       true_positives_at_operating_confidence=tp,
+                       false_positives_at_operating_confidence=fp,
+                       false_negatives_at_operating_confidence=fn)
     (args.output_dir / "metrics.json").write_text(json.dumps(metrics, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     with (args.output_dir / "metrics.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(metrics))
+        writer = csv.DictWriter(handle, fieldnames=list(metrics), lineterminator="\n")
         writer.writeheader()
         writer.writerow(metrics)
     with (args.output_dir / "error_review.csv").open("w", newline="", encoding="utf-8") as handle:
         fieldnames = ["type", "image_id", "class_id", "confidence", "iou_with_best_unmatched_gt", "bbox_xyxy"]
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(errors)
-    write_pr_curve(args.output_dir / "pr_curve.png", pr_precision, pr_recall, map50)
+    write_pr_curve(args.output_dir / "pr_curve.png", pr_precision, pr_recall, map50, args.split)
     print(json.dumps(metrics, indent=2, allow_nan=False))
 
 
