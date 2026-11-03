@@ -1,0 +1,26 @@
+[
+  {
+    "model": "YOLOv3-tiny (FP32 reproduction)",
+    "val_mAP50": 0.9733306938571611,
+    "val_mAP50_95": 0.6264326199582844,
+    "test_mAP50": 0.9171879155451768,
+    "test_mAP50_95": 0.5493377099725524,
+    "test_precision_at_val_threshold": 0.8805970149253731,
+    "test_recall_at_val_threshold": 0.8939393939393939,
+    "validation_selected_confidence": 0.386606,
+    "batch1_val_ms_per_image": 10.548038639681181,
+    "training_seconds": 347.8900404600008
+  },
+  {
+    "model": "YOLO11n",
+    "val_mAP50": 0.9832219833759904,
+    "val_mAP50_95": 0.8655244967183584,
+    "test_mAP50": 0.936044657676965,
+    "test_mAP50_95": 0.7799660318283895,
+    "test_precision_at_val_threshold": 0.9661016949152542,
+    "test_recall_at_val_threshold": 0.8636363636363636,
+    "validation_selected_confidence": 0.361187,
+    "batch1_val_ms_per_image": 9.527037760126404,
+    "training_seconds": 161.04813288100002
+  }
+]

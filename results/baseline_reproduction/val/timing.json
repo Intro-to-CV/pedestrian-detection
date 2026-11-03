@@ -1,0 +1,15 @@
+{
+  "checkpoint_sha256": "041227e92f882177f663f09830d3e77955d905db69d869621eb17ac3a94a96db",
+  "images": 25,
+  "batch": 16,
+  "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "validation_wall_seconds": 2.357414701999005,
+  "preprocess_ms_per_image": 0.4186855199804995,
+  "inference_ms_per_image": 5.454904240032192,
+  "nms_ms_per_image": 1.9091732800006866,
+  "parameters": 8669876,
+  "native_precision_best_f1": 0.9132623543941599,
+  "native_recall_best_f1": 0.9552238805970149,
+  "native_mAP50": 0.971156784300887,
+  "native_mAP50_95": 0.6277661627673911
+}

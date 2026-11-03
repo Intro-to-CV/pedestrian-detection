@@ -1,0 +1,51 @@
+[
+  {
+    "image": "PennPed00015",
+    "false_positives": [
+      {
+        "confidence": 0.931843,
+        "best_iou": 0.4624302717419061
+      }
+    ],
+    "missed": [
+      {
+        "best_low_confidence_iou": 0.7771675208193329,
+        "best_low_confidence_score": 0.032588
+      }
+    ]
+  },
+  {
+    "image": "FudanPed00025",
+    "false_positives": [],
+    "missed": [
+      {
+        "best_low_confidence_iou": 0.9075523255268085,
+        "best_low_confidence_score": 0.020968
+      }
+    ]
+  },
+  {
+    "image": "PennPed00044",
+    "false_positives": [],
+    "missed": [
+      {
+        "best_low_confidence_iou": 0.8876716108158815,
+        "best_low_confidence_score": 0.152407
+      }
+    ]
+  },
+  {
+    "image": "FudanPed00016",
+    "false_positives": [
+      {
+        "confidence": 0.584015,
+        "best_iou": 0.0
+      },
+      {
+        "confidence": 0.322731,
+        "best_iou": 0.0
+      }
+    ],
+    "missed": []
+  }
+]

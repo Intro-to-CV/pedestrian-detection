@@ -1,0 +1,27 @@
+{
+  "locked_utc": "2026-11-02T12:38:58.727531+00:00",
+  "selection_source": "validation only; no test metrics consulted",
+  "test_split_manifest_sha256": "7b4c91a832d51a3e0dbc423c3a9cf7c9477338fc95d2aaf2569b81177bdc1f2c",
+  "evaluation": {
+    "image_size": 640,
+    "confidence_floor_for_ap": 0.001,
+    "nms_iou": 0.6,
+    "max_detections": 300,
+    "precision": "FP32",
+    "shared_evaluator": "scripts/evaluate.py"
+  },
+  "yolo11n": {
+    "mosaic": "on",
+    "seed": 42,
+    "checkpoint": "models/yolo11n_best.pt",
+    "checkpoint_sha256": "d5aadfabcaa5b2c1409abcb9ad52b793bccd0abf3a5361c585cfb192dc28fc20",
+    "operating_confidence": 0.361187,
+    "validation_metric_sha256": "4966c0f19f5576acfac5e9884c851417f3236ef43a3ea718c5f43e3a93680d2a"
+  },
+  "yolov3_tiny_reproduced": {
+    "checkpoint": "models/yolov3_tiny_best.pt",
+    "checkpoint_sha256": "041227e92f882177f663f09830d3e77955d905db69d869621eb17ac3a94a96db",
+    "operating_confidence": 0.386606,
+    "validation_metric_sha256": "97327f3499ebab22e0397e53a405cc85b5aa59a52eaae31061477ed5867df0ed"
+  }
+}

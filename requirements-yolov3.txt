@@ -1,0 +1,12 @@
+# Separate environment: the pinned legacy trainer requires a newer Ultralytics helper.
+# Install alongside the pinned source checkout's requirements.txt.
+torch==2.11.0
+torchvision==0.26.0
+numpy==2.3.5
+opencv-python==4.13.0.92
+ultralytics==8.4.164
+ultralytics-thop==2.2.1
+pandas==2.2.3
+PyYAML==6.0.3
+Pillow==12.0.0
+matplotlib==3.10.8

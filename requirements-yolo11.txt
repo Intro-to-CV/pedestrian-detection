@@ -1,0 +1,13 @@
+# CUDA runtime/driver compatibility depends on the machine; these were the
+# package versions used for the recorded RTX 3050 runs.
+torch==2.11.0
+torchvision==0.26.0
+numpy==2.3.5
+opencv-python==4.13.0.92
+ultralytics==8.3.228
+pandas==2.2.3
+PyYAML==6.0.3
+Pillow==12.0.0
+matplotlib==3.10.8
+ipykernel==6.31.0
+nbformat==5.10.4

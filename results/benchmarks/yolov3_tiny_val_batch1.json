@@ -1,0 +1,15 @@
+{
+  "model": "yolov3-tiny",
+  "split": "val",
+  "images": 25,
+  "batch": 1,
+  "precision": "FP32",
+  "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "native_framework_version": "8.4.164",
+  "preprocess_ms_per_image": 0.6985901997541077,
+  "inference_ms_per_image": 6.984007999999449,
+  "nms_ms_per_image": 2.8654404399276245,
+  "sum_ms_per_image": 10.548038639681181,
+  "fps_from_native_timing": 94.80435502369617,
+  "whole_validation_wall_seconds": 3.021848639000382
+}
